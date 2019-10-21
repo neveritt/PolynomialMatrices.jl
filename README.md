@@ -27,7 +27,7 @@ julia> M = [Poly([1, 2, 3]) Poly([1]); Poly([0,2]) Poly([0,1])]
   Poly(2⋅x)              Poly(x)
 ```
 
-The trouble with the resulting matrix is that the number of operations we can do over such objest is quite limited. If, for example, we want to check column-reducedness or perform triangularization, plain Julia has no functionality for that. And now `PolynomialMatrices` package enters the stage...
+The trouble with the resulting matrix is that the number of operations we can do over such object is quite limited. If, for example, we want to check column-reducedness or perform triangularization, plain Julia has no functionality for that. And now `PolynomialMatrices` package enters the stage...
 
 ## Polynomial matrix in Julia as `PolyMatrix`
 
@@ -51,7 +51,7 @@ julia> P(1)
   2  1
 ```
 
-Or, a polynomial matrix `P` can be transformed into an upper triangular `R` by premultplication by unimodular `U` using
+Or, a polynomial matrix `P` can be transformed into an upper triangular `R` by premultiplication by unimodular `U` using
 
 ```julia
 julia> R,U = rtriang(P)
@@ -121,18 +121,36 @@ The functions for polynomial matrices implemented in `PolynomialMatrices` packag
 * `coeffs`: dictionary of coefficient matrices, keys are the powers
 * `degree`, `col_degree`, `row_degree`: degree, column and row degrees
 * `variable`, `vartype`: polynomial corresponding to the variable, symbol of the variable
-* `high_col_deg_matrix`, `high_row_deg_matrix`: coefficient matrices corresponding to leading column and row degrees, respectively.
+* `high_col_deg_matrix`, `high_row_deg_matrix`: coefficient matrices corresponding to leading column and row degrees, respectively
+* `det`: determinant of polynomial matrix
+<!-- ```julia
+julia> det(P)
+Poly(-s + 2*s^2 + 3*s^3)
+``` -->
 
 ### Analysis
 * `is_col_proper`, `is_row_proper`: checking if the matrix is column- and row-proper (also column- and row-reduced)
 
 ### Reductions, conversions
 * `colred`, `rowred`: column and row degree reduction of a polynomial matrix
-* `ltriang`, `rtriang`: conversion to a lower left and uppper right triangular polynomial matrix
-* `hermite`: conversion to hermite form.
+* `ltriang`, `rtriang`: conversion to a lower left and upper right triangular polynomial matrix
+* `gcld`, `gcrd`: greatest common left divisor and right divisor of two polynomial matrices
+* `hermite`: conversion to hermite form
+* `inv`: returns the inverse in terms of the determinant and the adjugate matrix
+
+<!-- The inverse is given by the well known expression `P^{-1} = adjP*detP^{-1}` where `detP` is the determinant and `adjP` is the adjugate Matrix.
+```julia
+julia> detP, adjP = inv(P)
+(Poly(-s + 2*s^2 + 3*s^3), Poly{Int64}[Poly(s) Poly(-1); Poly(-2*s) Poly(1 + 2*s + 3*s^2)])
+
+julia> P*adjP
+2×2 PolyMatrix{Int64,Array{Int64,2},Val{:s},2}:
+ Poly(-s + 2*s^2 + 3*s^3)  Poly(0)
+ Poly(0)                   Poly(-s + 2*s^2 + 3*s^3)
+``` -->
+
 
 ## Future plans
-* `det` for computing the determinant of a polynomial matrix
 * `roots` for computing the roots (or zeros) of a polynomial matrix
 * some state space realization from a fraction of two polynomial matrices
 * ...
